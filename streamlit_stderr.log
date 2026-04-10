@@ -1,0 +1,613 @@
+2026-04-08 09:38:34.898 Did not auto detect external IP.
+Please go to https://docs.streamlit.io/ for debugging hints.
+Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546
+handle: <_ThreadSafeHandle AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546>
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sender,
+        ^^^^^^^
+    ...<6 lines>...
+        pages,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+        page_script_hash, fragment_ids_this_run, pages
+    )
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\nzayniyev\\.streamlit'
+2026-04-08 09:38:55.418 Uncaught app execution
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\streamlit_app.py", line 1425, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\streamlit_app.py", line 1389, in main
+    df, h1, h2, _improvement, outcomes = get_analysis_bundle()
+                                         ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 281, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 326, in _get_or_create_cached_value
+    return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 385, in _handle_cache_miss
+    computed_value = self._info.func(*func_args, **func_kwargs)
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\streamlit_app.py", line 152, in get_analysis_bundle
+    h1 = summarize_h1(df)
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\analyze_resegmentation.py", line 159, in summarize_h1
+    transfer_pre["bucket"] = np.select(
+                             ~~~~~~~~~^
+        [
+        ^
+    ...<5 lines>...
+        default="rule_no_risk_no",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\numpy\lib\_function_base_impl.py", line 898, in select
+    raise TypeError(
+        f'invalid entry {i} in condlist: should be boolean ndarray')
+TypeError: invalid entry 0 in condlist: should be boolean ndarray
+Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546
+handle: <_ThreadSafeHandle AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546>
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sender,
+        ^^^^^^^
+    ...<6 lines>...
+        pages,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+        page_script_hash, fragment_ids_this_run, pages
+    )
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\nzayniyev\\.streamlit'
+2026-04-08 09:39:02.554 Uncaught app execution
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\streamlit_app.py", line 1425, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\streamlit_app.py", line 1389, in main
+    df, h1, h2, _improvement, outcomes = get_analysis_bundle()
+                                         ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 281, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 326, in _get_or_create_cached_value
+    return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 385, in _handle_cache_miss
+    computed_value = self._info.func(*func_args, **func_kwargs)
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\streamlit_app.py", line 152, in get_analysis_bundle
+    h1 = summarize_h1(df)
+  File "C:\Users\nzayniyev\Documents\Scripts\Segmentation data for analysis\analyze_resegmentation.py", line 159, in summarize_h1
+    transfer_pre["bucket"] = np.select(
+                             ~~~~~~~~~^
+        [
+        ^
+    ...<5 lines>...
+        default="rule_no_risk_no",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\numpy\lib\_function_base_impl.py", line 898, in select
+    raise TypeError(
+        f'invalid entry {i} in condlist: should be boolean ndarray')
+TypeError: invalid entry 0 in condlist: should be boolean ndarray
+Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546
+handle: <_ThreadSafeHandle AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546>
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sender,
+        ^^^^^^^
+    ...<6 lines>...
+        pages,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+        page_script_hash, fragment_ids_this_run, pages
+    )
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\nzayniyev\\.streamlit'
+2026-04-08 09:40:20.922 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:20.943 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:20.968 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:20.985 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:21.031 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:21.044 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:21.059 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:21.072 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:21.153 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:21.539 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:21.546 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546
+handle: <_ThreadSafeHandle AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546>
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sender,
+        ^^^^^^^
+    ...<6 lines>...
+        pages,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+        page_script_hash, fragment_ids_this_run, pages
+    )
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\nzayniyev\\.streamlit'
+2026-04-08 09:40:27.663 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:27.701 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:27.748 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:27.799 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:27.812 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:27.817 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546
+handle: <_ThreadSafeHandle AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546>
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sender,
+        ^^^^^^^
+    ...<6 lines>...
+        pages,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+        page_script_hash, fragment_ids_this_run, pages
+    )
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\nzayniyev\\.streamlit'
+2026-04-08 09:40:29.579 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.600 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.622 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.642 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.664 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.677 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.693 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.705 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:29.786 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:30.211 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:40:30.217 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546
+handle: <_ThreadSafeHandle AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546>
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sender,
+        ^^^^^^^
+    ...<6 lines>...
+        pages,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+        page_script_hash, fragment_ids_this_run, pages
+    )
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\nzayniyev\\.streamlit'
+2026-04-08 09:48:23.333 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.355 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.378 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.399 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.430 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.450 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.469 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.488 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.557 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.910 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:23.915 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+Exception in callback AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546
+handle: <_ThreadSafeHandle AppSession._on_scriptrunner_event.<locals>.<lambda>() at C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py:546>
+Traceback (most recent call last):
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\asyncio\events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 546, in <lambda>
+    lambda: self._handle_scriptrunner_event_on_event_loop(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sender,
+        ^^^^^^^
+    ...<6 lines>...
+        pages,
+        ^^^^^^
+    )
+    ^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 641, in _handle_scriptrunner_event_on_event_loop
+    msg = self._create_new_session_message(
+        page_script_hash, fragment_ids_this_run, pages
+    )
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 800, in _create_new_session_message
+    _populate_user_info_msg(imsg.user_info)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\app_session.py", line 1297, in _populate_user_info_msg
+    inst = Installation.instance()
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 314, in instance
+    cls._instance = Installation()
+                    ~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 323, in __init__
+    self.installation_id_v4 = _get_machine_id_v4()
+                              ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\runtime\metrics_util.py", line 295, in _get_machine_id_v4
+    with file_util.streamlit_write(filepath) as output:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Users\nzayniyev\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\streamlit\file_util.py", line 113, in streamlit_write
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 236, in makedirs
+PermissionError: [WinError 5] Access is denied: 'C:\\Users\\nzayniyev\\.streamlit'
+2026-04-08 09:48:40.735 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.756 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.777 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.793 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.820 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.833 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.844 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.856 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:40.918 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:41.346 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-04-08 09:48:41.349 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
