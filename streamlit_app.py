@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import numpy as np
 import pandas as pd
@@ -45,12 +45,12 @@ COLORS = {
 }
 
 CREDIT_COLORS = {
-    0: "#D9DADA",
+    0: "#F1F2F7",
     1: "#B2B3B3",
     2: "#898989",
     3: "#7688A1",
-    4: "#193F72",
-    5: "#2B2A29",
+    4: "#2957A2",
+    5: "#193F72",
 }
 
 SEGMENT_CONFIG = {
@@ -95,6 +95,18 @@ def format_status_label(value: object) -> str:
     if status in {"entry", "re_entry"}:
         return "Новые"
     return status
+
+
+def ensure_client_code_display(df: pd.DataFrame) -> pd.DataFrame:
+    if "client_code" in df.columns:
+        df = df.copy()
+        df["client_code"] = df["client_code"].astype(str).str.zfill(8)
+        if "client_code_display" not in df.columns:
+            df["client_code_display"] = df["client_code"]
+        else:
+            df["client_code_display"] = df["client_code"]
+    return df
+
 
 def inject_styles() -> None:
     st.markdown(
@@ -1479,7 +1491,7 @@ def fig_metric_dumbbell(
     metric_df: pd.DataFrame, left_label: str, right_label: str, title: str
 ) -> go.Figure:
     label_candidates = [
-        col for col in metric_df.columns if col not in {left_label, right_label, "??????"}
+        col for col in metric_df.columns if col not in {left_label, right_label, "Разрыв"}
     ]
     label_col = label_candidates[0] if label_candidates else metric_df.columns[0]
     plot_df = metric_df[[label_col, left_label, right_label]].copy()
@@ -1521,7 +1533,7 @@ def fig_metric_dumbbell(
             hovertemplate="%{y}<br>" + right_label + ": %{x:.2f}%<extra></extra>",
         )
     )
-    fig.update_xaxes(title="????, %")
+    fig.update_xaxes(title="Доля, %")
     fig.update_yaxes(categoryorder="array", categoryarray=list(plot_df[label_col])[::-1])
     return apply_fig_style(fig, title)
 
@@ -1949,7 +1961,7 @@ def render_hero(title: str, subtitle: str) -> None:
 def render_overview(df: pd.DataFrame, h1: dict, h2: dict) -> None:
     render_hero(
         "Дашборд ресегментации",
-        "Интерактивный обзор динамики базы, оборотов, кредитного качества и переводов между КОРП и МСБ.",
+        "Обзор динамики активной базы, оборотов и качества кредита.",
     )
     
 
@@ -2028,40 +2040,39 @@ def render_overview(df: pd.DataFrame, h1: dict, h2: dict) -> None:
         snapshot = pd.DataFrame(
             [
                 {
-                    "Наблюдение": "Гипотеза 1",
+                    "Наблюдение": "Гипотеза 1. При пересегментации из КОРП в МСБ попадает существенная доля NPL клиентов",
                     "Вывод": "Частично подтверждается",
                     "Почему": "Переведенные клиенты более стрессовые, чем в среднем удержанные в КОРП, но в основном уже не проходят формальное правило КОРП.",
                 },
                 {
-                    "Наблюдение": "Гипотеза 2",
+                    "Наблюдение": "Гипотеза 2. В КОРП входят клиенты не соответствующие критериям сегментации на краткосрочный период",
                     "Вывод": "Сильно подтверждается для слабых входов",
                     "Почему": "Слабые входы в КОРП быстро выбывают и часто передаются в МСБ.",
                 },
                 {
-                    "Наблюдение": "Потенциал восстановления",
-                    "Вывод": "Есть у части когорты перевода",
-                    "Почему": "Рискованные переведенные клиенты улучшаются темпами, близкими к рискованным удержанным клиентам КОРП.",
-                },
-                {
-                    "Наблюдение": "Гипотеза 3",
-                    "Вывод": "Смотрите отдельную страницу",
-                    "Почему": "Клиентов МСБ->КОРП можно сравнить с удержанными в МСБ, чтобы проверить, поднимают ли лучших клиентов системно.",
+                    "Наблюдение": "Гипотеза 3. Хороших клиентов переводят из МСБ в КОРП",
+                    "Вывод": "Закономерно согласно протоколу",
+                    "Почему": "Клеинты, которые переходят из МСБ в КОРП не имеют кредитов, но при этом не соответствуют критериям КОРП по оборотам.",
                 },
             ]
         )
         st.dataframe(snapshot, width="stretch", hide_index=True)
 
 def render_h1(df: pd.DataFrame) -> None:
+    df = ensure_client_code_display(df)
     render_hero(
-        "Гипотеза 1: КОРП переводит слабых клиентов в МСБ",
-        "На этой странице сравнивается месяц перед переводом КОРП→МСБ с клиентами КОРП, которые оставались в КОРП в те же периоды.",
+        "Гипотеза 1: При пересегментации из КОРП в МСБ попадает существенная доля NPL клиентов",
+        "87% NPL клиентов относящихся к КОРП были переведены в МСБ в июльской пересегментации",
     )
 
-    
     render_plot(fig_korp_npl_status_monthly(df), "h1_korp_npl_status")
-    st.markdown(
-        "<hr style='border:none;height:4px;background:#2B2A29;margin:1.25rem 0 1.5rem 0;opacity:0.9;'>",
-        unsafe_allow_html=True,
+
+
+def render_appendix(df: pd.DataFrame) -> None:
+    df = ensure_client_code_display(df)
+    render_hero(
+        "Приложение",
+        "Детальные выборки и вспомогательные графики к Гипотезе 1.",
     )
     available_months = sorted(
         get_pre_segment(df, KORP)
@@ -2172,7 +2183,7 @@ def render_h1(df: pd.DataFrame) -> None:
     st.dataframe(metric_df, width="stretch", hide_index=True)
 
     sample_cols = [
-        "client_code",
+        "client_code_display",
         "eomonth",
         "next_eomonth",
         "credit_class",
@@ -2192,14 +2203,21 @@ def render_h1(df: pd.DataFrame) -> None:
     st.caption(
         "Это записи до перевода, отсортированные в сторону худшего кредитного класса, большей просрочки и более слабого профиля оборота."
     )
-    st.dataframe(suspicious[sample_cols].head(50), width="stretch", hide_index=True)
+    st.dataframe(
+        suspicious[sample_cols]
+        .rename(columns={"client_code_display": "Код клиента"})
+        .head(50),
+        width="stretch",
+        hide_index=True,
+    )
 
 
 
 def render_h2(df: pd.DataFrame, h2: dict, outcomes: pd.DataFrame) -> None:
+    df = ensure_client_code_display(df)
     render_hero(
-        "Гипотеза 2: КОРП краткосрочно заводит посредственных клиентов",
-        "На этой странице рассматриваются качество входов, выбытия зрелых когорт и различия между слабыми и устойчивыми входами в КОРП.",
+        "Гипотеза 2: В КОРП входят клиенты не соответствующие критериям сегментации на краткосрочный период",
+        "Каждый пятый клиент, не соответствующий формальным критериям КОРП, передается в МСБ.",
     )
 
     
@@ -2216,7 +2234,7 @@ def render_h2(df: pd.DataFrame, h2: dict, outcomes: pd.DataFrame) -> None:
         unsafe_allow_html=True,
     )
 
-    entries = h2["entries"]
+    entries = ensure_client_code_display(h2["entries"])
 
     quality = pd.DataFrame(h2["quality_rows"], columns=["Показатель", "Доля"])
     quality_label_map = {
@@ -2259,6 +2277,13 @@ def render_h2(df: pd.DataFrame, h2: dict, outcomes: pd.DataFrame) -> None:
         )[0]
 
     mature_summary = build_entry_month_summary(outcomes, horizon)
+    mature = get_mature_entry_outcomes(outcomes, horizon)
+    overall_to_msb_share = to_percent(mature["to_msb_within"]) if not mature.empty else 0.0
+    weak_to_msb_share = (
+        to_percent(mature.loc[mature["weak"], "to_msb_within"])
+        if not mature.empty and mature["weak"].any()
+        else 0.0
+    )
     mature_summary_display = mature_summary.rename(
         columns={
             "entry_date": "Месяц входа",
@@ -2270,51 +2295,40 @@ def render_h2(df: pd.DataFrame, h2: dict, outcomes: pd.DataFrame) -> None:
         }
     )
 
+    kpi_left, kpi_right = st.columns(2)
+    kpi_left.metric(
+        f"Переведены в МСБ за {horizon} мес. от всех входов",
+        f"{overall_to_msb_share:.2f}%",
+    )
+    kpi_right.metric(
+        f"Переведены в МСБ за {horizon} мес. от слабых входов",
+        f"{weak_to_msb_share:.2f}%",
+    )
+
     render_plot(fig_entry_flow(mature_summary, horizon, weak_scope=weak_scope), "h2_entry_flow")
 
-    mature = get_mature_entry_outcomes(outcomes, horizon)
     filtered_mature = mature.copy()
     if weak_scope == "to_msb":
         filtered_mature = mature[mature["to_msb_within"]].copy()
     elif weak_scope == "stay_korp":
         filtered_mature = mature[~mature["to_msb_within"]].copy()
 
-    selected_client_codes = filtered_mature["client_code"].unique()
-
-    transfer_pre = df[df["client_code"].isin(selected_client_codes) & (df["segment"] == KORP)].copy()
-    retain_pre = pd.DataFrame(columns=["client_code", "next_month_id"])
-
-    turnover_dynamics = build_h1_numeric_dynamics(df, transfer_pre, retain_pre, "turnover_bn")
-    debt_dynamics = build_h1_numeric_dynamics(df, transfer_pre, retain_pre, "debt")
-
-    scope_label = {
-        "all": "Все входы",
-        "to_msb": "Только переведены в МСБ",
-        "stay_korp": "Только остались в КОРП",
-    }[weak_scope]
-    chart_suffix = f"{horizon} мес., {scope_label}"
-
-    left, right = st.columns(2, gap="small")
-    with left:
-        render_plot(
-            fig_h1_numeric_dynamics(
-                turnover_dynamics,
-                f"Динамика оборота вокруг месяца перевода ({chart_suffix})",
-                "Оборот, млрд. сум",
-                subplot_titles=("", ""),
-            ),
-            "h2_turnover_dynamics",
+    transfer_pre = filtered_mature.loc[filtered_mature["to_msb_within"], ["client_code", "entry_month_id", "months_to_event"]].copy()
+    if not transfer_pre.empty:
+        transfer_pre["client_code"] = transfer_pre["client_code"].astype(str).str.zfill(8)
+        transfer_pre["next_month_id"] = (
+            transfer_pre["entry_month_id"] + transfer_pre["months_to_event"].fillna(horizon).astype(int)
         )
-    with right:
-        render_plot(
-            fig_h1_numeric_dynamics(
-                debt_dynamics,
-                f"Динамика долга вокруг месяца перевода ({chart_suffix})",
-                "Долг, млрд. сум",
-                subplot_titles=("", ""),
-            ),
-            "h2_debt_dynamics",
-        )
+    else:
+        transfer_pre = pd.DataFrame(columns=["client_code", "next_month_id"])
+
+    retain_pre = filtered_mature.loc[~filtered_mature["to_msb_within"], ["client_code", "entry_month_id"]].copy()
+    if not retain_pre.empty:
+        retain_pre["client_code"] = retain_pre["client_code"].astype(str).str.zfill(8)
+        retain_pre["next_month_id"] = retain_pre["entry_month_id"] + int(horizon)
+    else:
+        retain_pre = pd.DataFrame(columns=["client_code", "next_month_id"])
+
 
     weak = filtered_mature[filtered_mature["weak"]].copy()
     non_weak = filtered_mature[~filtered_mature["weak"]].copy()
@@ -2332,7 +2346,7 @@ def render_h2(df: pd.DataFrame, h2: dict, outcomes: pd.DataFrame) -> None:
     st.dataframe(
         suspect_entries[
             [
-                "client_code",
+                "client_code_display",
                 "eomonth",
                 "status",
                 "segment",
@@ -2342,7 +2356,9 @@ def render_h2(df: pd.DataFrame, h2: dict, outcomes: pd.DataFrame) -> None:
                 "is_group",
                 "is_official",
             ]
-        ].head(50),
+        ]
+        .rename(columns={"client_code_display": "Код клиента"})
+        .head(50),
         width="stretch",
         hide_index=True,
     )
@@ -2565,7 +2581,7 @@ def render_h3(df: pd.DataFrame) -> None:
     st.dataframe(
         good_sample[
             [
-                "client_code",
+                "client_code_display",
                 "eomonth",
                 "next_eomonth",
                 "turnover_bn",
@@ -2577,24 +2593,26 @@ def render_h3(df: pd.DataFrame) -> None:
                 "is_group_or_official",
                 "good_upgrade_candidate",
             ]
-        ].head(50),
+        ]
+        .rename(columns={"client_code_display": "Код клиента"})
+        .head(50),
         width="stretch",
         hide_index=True,
     )
 
 
 def render_h3_refactored(df: pd.DataFrame) -> None:
+    df = ensure_client_code_display(df)
     render_hero(
-        "Гипотеза 3: Неподходящих клиентов переводят из МСБ в КОРП",
-        "Переводят ли из МСБ в КОРП клиентов:\n- которые не проходят формальное правило КОРП\n- среди которых преобладают PL-клиенты с низким долгом",
+        "Гипотеза 3: Хороших клиентов переводят из МСБ в КОРП. На этой странице проверяется, выглядят ли клиенты МСБ→КОРП лучше, чем клиенты МСБ, которые оставались в МСБ в те же периоды",
+        "27% от переводов не проходят правило КОРП клиентов. 97% из них клиенты без кредита",
     )
 
     msb_pre = get_pre_segment(df, MSB).copy()
     transfer_months = sorted(
         msb_pre.loc[msb_pre["next_status"] == M2K, "next_eomonth"].dropna().unique().tolist()
     )
-    july_2025 = pd.Timestamp("2025-07-31")
-    default_months = [july_2025] if july_2025 in transfer_months else transfer_months[:1]
+    default_months = transfer_months.copy()
 
     selected_months = st.multiselect(
         "Месяцы переводов",
@@ -2672,6 +2690,56 @@ def render_h3_refactored(df: pd.DataFrame) -> None:
     col3.metric("Доля NPL", f"{npl_share_transfer:.2f}%")
     col4.metric("Доля клиентов с кредитами", f"{credit_share_transfer:.2f}%")
 
+    transfer_month_chart = (
+        transfer_all.assign(
+            category=np.where(
+                transfer_all["non_compliant_korp_rule"],
+                "Не проходят правило КОРП",
+                "Проходят правило КОРП",
+            ),
+            month_label=transfer_all["next_eomonth"].map(month_point_label),
+        )
+        .groupby(["next_eomonth", "month_label", "category"], as_index=False)["client_code"]
+        .nunique()
+        .rename(columns={"client_code": "clients"})
+        .sort_values(["next_eomonth", "category"])
+    )
+    if not transfer_month_chart.empty:
+        fig_transfer_months = go.Figure()
+        color_map = {
+            "Проходят правило КОРП": "#D7B56D",
+            "Не проходят правило КОРП": "#193F72",
+        }
+        for category in ["Проходят правило КОРП", "Не проходят правило КОРП"]:
+            cat_df = transfer_month_chart[transfer_month_chart["category"] == category].copy()
+            if cat_df.empty:
+                continue
+            fig_transfer_months.add_trace(
+                go.Bar(
+                    x=cat_df["month_label"],
+                    y=cat_df["clients"],
+                    name=category,
+                    marker_color=color_map[category],
+                    text=cat_df["clients"],
+                    textposition="inside",
+                    textfont=dict(
+                        size=15,
+                        color="#FFFFFF" if category == "Не проходят правило КОРП" else "#2B2A29",
+                    ),
+                    hovertemplate="%{x}<br>" + category + ": %{y}<extra></extra>",
+                )
+            )
+        fig_transfer_months.update_layout(
+            barmode="stack",
+            title="МСБ→КОРП по месяцам перевода",
+            xaxis_title="Месяцы переводов",
+            yaxis_title="Клиенты",
+            legend_title_text="",
+            margin=dict(l=10, r=10, t=50, b=10),
+        )
+        fig_transfer_months.update_xaxes(tickangle=-45, categoryorder="array", categoryarray=transfer_month_chart["month_label"].drop_duplicates().tolist())
+        render_plot(fig_transfer_months, "h3_transfer_month_chart")
+
     st.caption(f"{transfer_share_non_rule:.2f}% от переводов не проходят правило КОРП")
 
     metric_df = pd.DataFrame(
@@ -2691,7 +2759,7 @@ def render_h3_refactored(df: pd.DataFrame) -> None:
     st.dataframe(
         sample[
             [
-                "client_code",
+                "client_code_display",
                 "eomonth",
                 "next_eomonth",
                 "turnover_bn",
@@ -2703,23 +2771,17 @@ def render_h3_refactored(df: pd.DataFrame) -> None:
                 "low_debt",
                 "non_compliant_korp_rule",
             ]
-        ].head(50),
+        ]
+        .rename(columns={"client_code_display": "Код клиента"})
+        .head(50),
         width="stretch",
         hide_index=True,
     )
     return
 
 
-def render_client_explorer(df: pd.DataFrame) -> None:
-    df = df.copy()
-    df["client_code_display"] = df["client_code"].astype(str).str.zfill(8)
-    df = df.sort_values(["client_code", "eomonth"]).copy()
-
-    render_hero(
-        "Карточка клиента",
-        "Просмотр одного клиента по всем месячным срезам с быстрым доступом к переведенным и подозрительным когортам.",
-    )
-
+@st.cache_data(show_spinner=False)
+def prepare_client_explorer_cohorts(df: pd.DataFrame) -> tuple[list[str], list[str], dict[str, int]]:
     weak_entry_codes = (
         df.loc[
             ((df["segment"] == KORP) & df["is_entry_event"] & weak_client_mask(df)),
@@ -2728,16 +2790,59 @@ def render_client_explorer(df: pd.DataFrame) -> None:
         .drop_duplicates()
         .tolist()
     )
-    all_codes = df["client_code_display"].drop_duplicates().tolist()
 
-    npl_after_transfer_codes = []
-    for client_code, grp in df.groupby("client_code_display", sort=False):
-        transfer_months = grp.loc[grp["status"] == K2M, "month_id"]
-        if transfer_months.empty:
-            continue
-        first_transfer_month = transfer_months.min()
-        if grp.loc[grp["month_id"] > first_transfer_month, "credit_class"].ge(3).any():
-            npl_after_transfer_codes.append(client_code)
+    transfer_rows = (
+        df.loc[df["status"] == K2M, ["client_code_display", "month_id"]]
+        .rename(columns={"month_id": "transfer_month_id"})
+        .drop_duplicates()
+    )
+    first_transfer = (
+        transfer_rows.groupby("client_code_display", as_index=False)["transfer_month_id"]
+        .min()
+        .rename(columns={"transfer_month_id": "first_transfer_month_id"})
+    )
+    npl_after_transfer_codes = (
+        df[["client_code_display", "month_id", "credit_class"]]
+        .merge(first_transfer, on="client_code_display", how="inner")
+        .loc[
+            lambda x: x["month_id"].gt(x["first_transfer_month_id"]) & x["credit_class"].ge(3),
+            "client_code_display",
+        ]
+        .drop_duplicates()
+        .tolist()
+    )
+
+    entry_rows = (
+        df.loc[(df["segment"] == KORP) & df["is_entry_event"], ["client_code_display", "month_id"]]
+        .rename(columns={"month_id": "entry_month_id"})
+        .drop_duplicates()
+    )
+    entry_to_transfer = entry_rows.merge(transfer_rows, on="client_code_display", how="inner")
+    entry_to_transfer["month_diff"] = (
+        entry_to_transfer["transfer_month_id"] - entry_to_transfer["entry_month_id"]
+    )
+    min_transfer_after_entry = (
+        entry_to_transfer.loc[entry_to_transfer["month_diff"].between(1, 12)]
+        .groupby("client_code_display")["month_diff"]
+        .min()
+        .astype(int)
+        .to_dict()
+    )
+
+    return weak_entry_codes, npl_after_transfer_codes, min_transfer_after_entry
+
+
+def render_client_explorer(df: pd.DataFrame) -> None:
+    df = ensure_client_code_display(df)
+    df = df.sort_values(["client_code", "eomonth"]).copy()
+    latest_all_df = df.groupby("client_code", as_index=False).tail(1).copy()
+    weak_entry_codes, npl_after_transfer_codes, min_transfer_after_entry = prepare_client_explorer_cohorts(df)
+    all_codes = latest_all_df["client_code_display"].drop_duplicates().tolist()
+
+    render_hero(
+        "Карточка клиента",
+        "Просмотр одного клиента по всем месячным срезам с быстрым доступом к переведенным и подозрительным когортам.",
+    )
 
     cohort = st.selectbox(
         "Выбор когорты",
@@ -2761,37 +2866,21 @@ def render_client_explorer(df: pd.DataFrame) -> None:
     if cohort == "Клиенты, ставшие NPL после КОРП->МСБ":
         pool = npl_after_transfer_codes
     elif cohort == "Клиенты КОРП, перешедшие в МСБ в течение x мес. после входа":
-        pool = []
-        entry_rows = df[(df["segment"] == KORP) & df["is_entry_event"]].copy()
-        for client_code, grp in entry_rows.groupby("client_code_display", sort=False):
-            client_history = df[df["client_code_display"] == client_code]
-            matched = False
-            for _, entry_row in grp.iterrows():
-                month_diff = client_history["month_id"] - entry_row["month_id"]
-                moved_mask = (
-                    (client_history["status"] == K2M)
-                    & month_diff.ge(1)
-                    & month_diff.le(entry_to_msb_horizon)
-                )
-                if moved_mask.any():
-                    matched = True
-                    break
-            if matched:
-                pool.append(client_code)
+        pool = [
+            client_code
+            for client_code, min_diff in min_transfer_after_entry.items()
+            if min_diff <= entry_to_msb_horizon
+        ]
     elif cohort == "Слабые входы в КОРП":
         pool = weak_entry_codes
     else:
         pool = all_codes
 
-    pool_df = (
-        df[df["client_code_display"].isin(pool)]
-        .sort_values(["client_code", "eomonth"])
-        .groupby("client_code", as_index=False)
-        .tail(1)
-        .copy()
-    )
+    pool_history_df = df[df["client_code_display"].isin(pool)].copy()
+    pool_df = latest_all_df[latest_all_df["client_code_display"].isin(pool)].copy()
+    filtered_history_df = pd.DataFrame(columns=df.columns)
+
     if not pool_df.empty:
-        pool_history_df = df[df["client_code_display"].isin(pool)].copy()
         filter_code, filter_segment, filter_status, filter_rule = st.columns(4)
         code_query = filter_code.text_input(
             "Фильтр: Код клиента",
@@ -2805,7 +2894,9 @@ def render_client_explorer(df: pd.DataFrame) -> None:
             default=[],
             key="client_pool_segment_filter",
         )
-        status_options = sorted(pool_history_df["status"].dropna().map(format_status_label).astype(str).unique().tolist())
+        status_options = sorted(
+            pool_history_df["status"].dropna().map(format_status_label).astype(str).unique().tolist()
+        )
         selected_statuses = filter_status.multiselect(
             "Фильтр: Статус",
             options=status_options,
@@ -2828,7 +2919,9 @@ def render_client_explorer(df: pd.DataFrame) -> None:
             format_func=lambda x: pd.Timestamp(x).date().isoformat(),
             key="client_pool_month_filter",
         )
-        class_options = sorted(pd.to_numeric(pool_df["credit_class"], errors="coerce").dropna().astype(int).unique().tolist())
+        class_options = sorted(
+            pd.to_numeric(pool_df["credit_class"], errors="coerce").dropna().astype(int).unique().tolist()
+        )
         selected_classes = filter_class.multiselect(
             "Фильтр: class",
             options=class_options,
@@ -2852,13 +2945,15 @@ def render_client_explorer(df: pd.DataFrame) -> None:
             key="client_pool_debt_filter",
         )
 
-        filtered_pool_df = pool_history_df.copy() if code_query else pool_df.copy()
+        filtered_pool_df = pool_df.copy()
         if code_query:
             filtered_pool_df = filtered_pool_df[
                 filtered_pool_df["client_code_display"].astype(str).str.contains(code_query, case=False, na=False)
             ]
         if selected_segments:
-            filtered_pool_df = filtered_pool_df[filtered_pool_df["segment"].astype(str).isin(selected_segments)]
+            filtered_pool_df = filtered_pool_df[
+                filtered_pool_df["segment"].astype(str).isin(selected_segments)
+            ]
         if selected_statuses:
             matched_codes = pool_history_df.loc[
                 pool_history_df["status"].map(format_status_label).astype(str).isin(selected_statuses),
@@ -2869,7 +2964,9 @@ def render_client_explorer(df: pd.DataFrame) -> None:
             ]
         if corp_rule_choice != "Все":
             rule_value = corp_rule_choice == "Да"
-            filtered_pool_df = filtered_pool_df[filtered_pool_df["corp_rule"].astype(bool) == rule_value]
+            filtered_pool_df = filtered_pool_df[
+                filtered_pool_df["corp_rule"].astype(bool) == rule_value
+            ]
         if selected_months:
             selected_months_set = {pd.Timestamp(m) for m in selected_months}
             filtered_pool_df = filtered_pool_df[
@@ -2877,7 +2974,10 @@ def render_client_explorer(df: pd.DataFrame) -> None:
             ]
         if selected_classes:
             filtered_pool_df = filtered_pool_df[
-                pd.to_numeric(filtered_pool_df["credit_class"], errors="coerce").fillna(-1).astype(int).isin(selected_classes)
+                pd.to_numeric(filtered_pool_df["credit_class"], errors="coerce")
+                .fillna(-1)
+                .astype(int)
+                .isin(selected_classes)
             ]
         filtered_pool_df = filtered_pool_df[
             pd.to_numeric(filtered_pool_df["turnover_y_bn"], errors="coerce").fillna(0).between(*turnover_y_range)
@@ -2886,54 +2986,78 @@ def render_client_explorer(df: pd.DataFrame) -> None:
             pd.to_numeric(filtered_pool_df["debt"], errors="coerce").fillna(0).between(*debt_range)
         ]
 
-        st.caption(f"После фильтров: {filtered_pool_df['client_code_display'].nunique():,} клиентов")
-
-        pool_df = filtered_pool_df[
+        has_active_filters = any(
             [
-                "client_code_display",
-                "eomonth",
-                "segment",
-                "status",
-                "turnover_bn",
-                "turnover_y_bn",
-                "credit_class",
-                "debt",
-                "loan",
-                "corp_rule",
-                "is_group",
-                "is_official",
+                bool(code_query),
+                bool(selected_segments),
+                bool(selected_statuses),
+                corp_rule_choice != "Все",
+                bool(selected_months),
+                bool(selected_classes),
+                turnover_y_range != (0.0, max(turnover_y_max, 0.0)),
+                debt_range != (0.0, max(debt_max, 0.0)),
             ]
-        ].copy()
-        pool_df["status"] = pool_df["status"].map(format_status_label)
-        pool_df = pool_df.rename(
-            columns={
-                "client_code_display": "Код клиента",
-                "eomonth": "Последний месяц",
-                "segment": "Сегмент",
-                "status": "Статус",
-                "turnover_bn": "Оборот",
-                "turnover_y_bn": "Годовой оборот",
-                "credit_class": "class",
-                "debt": "Долг",
-                "loan": "Сумма кредита",
-                "corp_rule": "Проходит правило КОРП",
-                "is_group": "is_group",
-                "is_official": "is_official",
-            }
         )
-        st.dataframe(pool_df, width="stretch", hide_index=True)
+        suppress_unfiltered_all_clients = cohort == "Все клиенты" and not has_active_filters
 
-    # Aggregate graphs for filtered clients
-    if not filtered_pool_df.empty:
+        if suppress_unfiltered_all_clients:
+            filtered_pool_df = filtered_pool_df.iloc[0:0].copy()
+            filtered_history_df = filtered_history_df.iloc[0:0].copy()
+            st.info("Для списка всех клиентов сначала примените хотя бы один фильтр. Это ускоряет открытие страницы.")
+        else:
+            filtered_codes = filtered_pool_df["client_code_display"].drop_duplicates().tolist()
+            filtered_history_df = pool_history_df[
+                pool_history_df["client_code_display"].isin(filtered_codes)
+            ].copy()
+
+            st.caption(f"После фильтров: {filtered_pool_df['client_code_display'].nunique():,} клиентов")
+
+            pool_display_df = filtered_pool_df[
+                [
+                    "client_code_display",
+                    "eomonth",
+                    "segment",
+                    "status",
+                    "turnover_bn",
+                    "turnover_y_bn",
+                    "credit_class",
+                    "debt",
+                    "loan",
+                    "corp_rule",
+                    "is_group",
+                    "is_official",
+                ]
+            ].copy()
+            pool_display_df["status"] = pool_display_df["status"].map(format_status_label)
+            pool_display_df = pool_display_df.rename(
+                columns={
+                    "client_code_display": "Код клиента",
+                    "eomonth": "Последний месяц",
+                    "segment": "Сегмент",
+                    "status": "Статус",
+                    "turnover_bn": "Оборот",
+                    "turnover_y_bn": "Годовой оборот",
+                    "credit_class": "class",
+                    "debt": "Долг",
+                    "loan": "Сумма кредита",
+                    "corp_rule": "Проходит правило КОРП",
+                    "is_group": "is_group",
+                    "is_official": "is_official",
+                }
+            )
+            st.dataframe(pool_display_df, width="stretch", hide_index=True)
+    else:
+        filtered_pool_df = pool_df.copy()
+    if not filtered_history_df.empty:
         st.subheader("Агрегированные графики по фильтрованным клиентам")
-
-        # Group by eomonth and compute averages
-        agg_df = filtered_pool_df.groupby("eomonth").agg({
-            "turnover_bn": "mean",
-            "turnover_y_bn": "mean",
-            "credit_class": mean_credit_class_nonzero,
-            "debt": "mean"
-        }).reset_index()
+        agg_df = filtered_history_df.groupby("eomonth").agg(
+            {
+                "turnover_bn": "mean",
+                "turnover_y_bn": "mean",
+                "credit_class": mean_credit_class_nonzero,
+                "debt": "mean",
+            }
+        ).reset_index()
 
         left, right = st.columns(2)
         with left:
@@ -2947,8 +3071,10 @@ def render_client_explorer(df: pd.DataFrame) -> None:
                 "filtered_credit",
             )
 
-    default_code = "04694951"
-    client_code = st.text_input("Код клиента", value=default_code).strip().zfill(8)
+    default_code = ""
+    client_code = st.text_input("Код клиента", value=default_code).strip().zfill(8) if st.session_state.get("client_pool_code_filter", "").strip() == "" else st.session_state.get("client_pool_code_filter", "").strip().zfill(8)
+    if not client_code:
+        return
 
     history = df[df["client_code_display"] == client_code].copy()
     if history.empty:
@@ -2956,7 +3082,6 @@ def render_client_explorer(df: pd.DataFrame) -> None:
         return
 
     history = history.sort_values("eomonth")
-    latest = history.iloc[-1]
 
     left, right = st.columns(2)
     with left:
@@ -2966,7 +3091,7 @@ def render_client_explorer(df: pd.DataFrame) -> None:
         )
     with right:
         render_plot(
-            fig_client_lines(history, ["credit_class", "debt"], "\u0418\u0441\u0442\u043e\u0440\u0438\u044f \u043a\u0440\u0435\u0434\u0438\u0442\u0430 \u0438 \u0434\u043e\u043b\u0433\u0430"),
+            fig_client_lines(history, ["credit_class", "debt"], "История кредита и долга"),
             "client_credit",
         )
 
@@ -2994,7 +3119,7 @@ def render_client_explorer(df: pd.DataFrame) -> None:
 def render_segmentation_criteria() -> None:
     render_hero(
         "Критерии сегментации",
-        "Справочная страница с правилами и порогами, которые используются при отнесении клиентов к сегментам банка.",
+        "Согласно блоку III приложения к протоколу 157-БК от 16.10.2025",
     )
 
     st.markdown(
@@ -3004,7 +3129,7 @@ def render_segmentation_criteria() -> None:
         <ul style="margin:0.6rem 0 0 1.2rem;">
             <li>Кредитовый оборот за последний календарный год. Допускается использование выручки клиента за последний финансовый год либо неочищенных кредитовых оборотов при отсутствии очищенного кредитового оборота.</li>
             <li>Принадлежность к группе компаний корпоративного сегмента либо к международным компаниям.</li>
-            <li>Наличие кредита или кредитной заявки по сумме договора.</li>
+            <li><strong>Наличие кредита или кредитной заявки по сумме договора.</strong></li>
         </ul>
         </div>
         """,
@@ -3053,6 +3178,28 @@ def render_segmentation_criteria() -> None:
         unsafe_allow_html=True,
     )
 
+    st.markdown(
+        """
+        <div class="section-card">
+        <strong>Наше предложение</strong>
+        <p style="margin:0.6rem 0;">На текущий момент есть 2 решения для сегментации.</p>
+        <ol style="margin:0.6rem 0 0 1.2rem;">
+            <li>Клиенты с кредитами должны оставаться в своем сегменте.</li>
+            <li>KPI по АКБ ДКСИ необходимо разделить на:
+                <ul style="margin:0.4rem 0 0 1.2rem;">
+                    <li>количество привлеченных</li>
+                    <li>количество соответствующее критериям сегментации.</li>
+                </ul>
+                <p style="margin:0.6rem 0 0 0;font-family:monospace;">X*(привлеченный не соответствует критериям КОРП) + Y*(привлеченный соответствует критериям КОРП)</p>
+                <p style="margin:0.4rem 0 0 1.2rem;font-style:italic;color:#7688A1;">(Это позволяет переводить в МСБ привлечённых клиентов, которые не соответствуют критериям сегмента ДКСИ)</p>
+            </li>
+            <li>Наличие кредита или кредитной заявки по сумме договора только в нашем банке</li>
+        </ol>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 def main() -> None:
     inject_styles()
     df, h1, h2, _improvement, outcomes = get_analysis_bundle()
@@ -3066,6 +3213,7 @@ def main() -> None:
                 "Гипотеза 1",
                 "Гипотеза 2",
                 "Гипотеза 3",
+                "Приложение",
                 "Критерии сегментации",
                 "Клиенты",
             ],
@@ -3086,6 +3234,8 @@ def main() -> None:
         render_h2(df, h2, outcomes)
     elif page == "Гипотеза 3":
         render_h3_refactored(df)
+    elif page == "Приложение":
+        render_appendix(df)
     elif page == "Критерии сегментации":
         render_segmentation_criteria()
     elif page == "Клиенты":
